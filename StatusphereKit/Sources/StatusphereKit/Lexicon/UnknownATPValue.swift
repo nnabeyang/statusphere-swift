@@ -11,7 +11,10 @@ public enum UnknownATPValue: UnknownATPValueProtocol {
   case record(any ATProtoRecord)
   case any(any Codable & Hashable & Sendable)
 
-  public static let allTypes: [String: any ATProtoRecord.Type] = [:
+  public static let allTypes: [String: any ATProtoRecord.Type] = [
+    "app.bsky.feed.postgate": App.Bsky.FeedPostgate.self,
+    "app.bsky.feed.threadgate": App.Bsky.FeedThreadgate.self,
+    "xyz.statusphere.status": Xyz.Statusphere.Status.self,
   ]
 
   public var type: Swift.String? {

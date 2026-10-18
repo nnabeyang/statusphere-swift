@@ -4,7 +4,8 @@ import SwiftAtproto
 
 /// An unauthenticated XRPC client for the Bluesky AppView.
 ///
-/// Used to resolve handles when logging in.
+/// Used to resolve handles and to look up the profiles of the people whose
+/// statuses are shown.
 public struct PublicClient: XRPCCallable {
   public static let serviceEndpoint = URL(string: "https://public.api.bsky.app")!
 

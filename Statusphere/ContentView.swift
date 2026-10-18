@@ -1,3 +1,4 @@
+import StatusphereKit
 import SwiftUI
 
 struct ContentView: View {
@@ -7,8 +8,14 @@ struct ContentView: View {
     NavigationStack {
       ScrollView {
         VStack(alignment: .leading, spacing: 16) {
-          Text("Sign in with your Atmosphere account.")
+          Text("Set your status on the Atmosphere.")
             .foregroundStyle(.secondary)
+
+          if let errorMessage = model.errorMessage {
+            Text(errorMessage)
+              .font(.callout)
+              .foregroundStyle(.red)
+          }
 
           switch model.phase {
           case .launching:
@@ -17,8 +24,14 @@ struct ContentView: View {
           case .loggedOut:
             LoginView(model: model)
           case .loggedIn:
-            SignedInView(model: model)
+            StatusPickerView(model: model)
           }
+
+          let top = model.statuses.top()
+          if !top.isEmpty {
+            TopStatusesView(top: top)
+          }
+          RecentStatusesView(recent: model.statuses.recent(), handles: model.handles)
         }
         .padding()
         .frame(maxWidth: 600)
