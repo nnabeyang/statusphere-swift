@@ -1,0 +1,22 @@
+{
+  "dependencies" : [
+    {
+      "lexicons" : [
+        {
+          "nsIds" : [
+            "com.atproto.identity.resolveHandle"
+          ],
+          "path" : "lexicons/com/atproto"
+        }
+      ],
+      "location" : "https://github.com/bluesky-social/atproto.git",
+      "state" : {
+        "revision" : "612ae323111b366538acbb95fa0c5a496536b8ab",
+        "tag" : "@atproto/api@0.27.0"
+      }
+    }
+  ],
+  "generator" : "0.44.5",
+  "module" : "Sources/StatusphereKit/Lexicon",
+  "originHash" : "69c175dd5cdd7fc87ddf443717c535ec855edf9b7ce8cbdff2737eb59050f1a7"
+}

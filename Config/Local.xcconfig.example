@@ -1,0 +1,16 @@
+// Copy this file to Local.xcconfig and uncomment the settings you need.
+// Local.xcconfig is ignored by git.
+
+// Your team ID (Xcode > Settings > Accounts, or developer.apple.com).
+// Automatic signing lets Xcode create the provisioning profile for you.
+// DEVELOPMENT_TEAM = ABCDE12345
+// CODE_SIGN_STYLE = Automatic
+
+// A reverse-DNS prefix you own, e.g. com.example.yourname.
+// BUNDLE_ID_PREFIX = com.example.yourname
+
+// The server that hosts your own client metadata, if you serve one.
+// STATUSPHERE_OAUTH_HOST = example.com
+
+// Or the release candidate server, to try changes before they reach production.
+// STATUSPHERE_OAUTH_HOST = soyokaze-pds-rc-677008170211.asia-northeast1.run.app
