@@ -1,3 +1,4 @@
 xcuserdata/
 DerivedData/
 Config/Local.xcconfig
+.docc-build/
