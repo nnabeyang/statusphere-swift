@@ -1,0 +1,152 @@
+@Tutorial(time: 30) {
+    @Intro(title: "Showing everyone's statuses") {
+        Everyone's statuses live in their own repositories. Follow new
+        `xyz.statusphere.status` records across the network with Jetstream,
+        count them, and show the top statuses and the most recent ones.
+    }
+
+    @Section(title: "Receive statuses from Jetstream") {
+        @ContentAndMedia {
+            The Node.js version keeps an index on its server. This app has no
+            server, so it subscribes to Jetstream directly, asking only for the
+            `xyz.statusphere.status` collection.
+
+            Jetstream can replay roughly the last day of events, so the app
+            starts from a day ago and then follows new events live.
+        }
+
+        @Steps {
+            @Step {
+                Create `Jetstream.swift` in `StatusphereKit`. A `StatusEvent`
+                is a status that was written or deleted. `Message` decodes a
+                Jetstream commit event and skips records that do not follow the
+                Lexicon.
+
+                @Code(name: "Jetstream.swift", file: "jetstream-01.swift")
+            }
+
+            @Step {
+                Add `Jetstream`, which connects with `URLSessionWebSocketTask`
+                and reconnects from the last event it saw if the connection
+                drops.
+
+                @Code(name: "Jetstream.swift", file: "jetstream-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Count the statuses") {
+        @ContentAndMedia {
+            Keep every status seen so far, keyed by its AT URI, and work out
+            what the home screen shows from them.
+        }
+
+        @Steps {
+            @Step {
+                Create `StatusIndex.swift`. It applies events and lists the
+                newest statuses.
+
+                @Code(name: "StatusIndex.swift", file: "status-index-01.swift")
+            }
+
+            @Step {
+                Add `top(limit:)`. A person's current status is their newest
+                one, and the top statuses are the ones most people have now.
+
+                @Code(name: "StatusIndex.swift", file: "status-index-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Look up handles") {
+        @ContentAndMedia {
+            Events carry the author's DID. Show their handle instead by looking
+            up profiles with `app.bsky.actor.getProfiles` on the Bluesky
+            AppView.
+        }
+
+        @Steps {
+            @Step {
+                Add `app.bsky.actor.getProfiles` to `.atproto.json`, along with
+                the Bluesky Lexicons it refers to. They come from
+                `@atproto/api@0.27.0`, the last release of the atproto
+                repository that includes the `app.bsky` Lexicons.
+
+                @Code(name: ".atproto.json", file: "atproto-config-05.json")
+            }
+
+            @Step {
+                Generate the code again.
+
+                @Code(name: "Terminal", file: "generate.sh")
+            }
+
+            @Step {
+                `PublicClient` already sends requests to the AppView without
+                logging in. Update its comment for its new use.
+
+                @Code(name: "PublicClient.swift", file: "public-client-02.swift", previousFile: "public-client-01.swift")
+            }
+
+            @Step {
+                Create `HandleDirectory.swift`. It looks handles up 25 at a
+                time, the most `getProfiles` accepts, and remembers them.
+
+                @Code(name: "HandleDirectory.swift", file: "handle-directory.swift")
+            }
+        }
+    }
+
+    @Section(title: "Show the statuses") {
+        @ContentAndMedia {
+            Start following Jetstream when the app launches, and show the top
+            statuses and the most recent ones under the status picker.
+        }
+
+        @Steps {
+            @Step {
+                In `AppModel`, follow Jetstream from a day back and keep the
+                statuses in a `StatusIndex`. Add your own status to it as soon
+                as it is written.
+
+                @Code(name: "AppModel.swift", file: "app-model-04.swift")
+            }
+
+            @Step {
+                Look up handles for the people who post, and for yourself.
+                `myHandle` replaces `did`.
+
+                @Code(name: "AppModel.swift", file: "app-model-05.swift")
+            }
+
+            @Step {
+                In `StatusViews.swift`, add `TopStatusesView`, which shows each
+                status with how many people have it, and `FlowLayout`, which
+                wraps them onto new rows.
+
+                @Code(name: "StatusViews.swift", file: "status-views-02.swift")
+            }
+
+            @Step {
+                Add `RecentStatusesView`, which shows how long ago each status
+                was set, and show your handle in the status picker.
+
+                @Code(name: "StatusViews.swift", file: "status-views-03.swift")
+            }
+
+            @Step {
+                Show both views in `ContentView`. Like the web version, Top
+                Statuses only appears once there is something to show.
+
+                @Code(name: "ContentView.swift", file: "content-view-03.swift")
+            }
+
+            @Step {
+                Run the app. Statuses from the last day appear, and new ones
+                arrive as people set them.
+
+                @Code(name: "ContentView.swift", file: "content-view-03.swift")
+            }
+        }
+    }
+}

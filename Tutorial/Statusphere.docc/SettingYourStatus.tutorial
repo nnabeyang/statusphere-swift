@@ -1,0 +1,163 @@
+@Tutorial(time: 30) {
+    @Intro(title: "Setting your status") {
+        A status is a record in your own repository, in the
+        `xyz.statusphere.status` collection. Generate Swift code for that
+        Lexicon, write a record to your PDS, and let the user pick a status in
+        the app.
+    }
+
+    @Section(title: "Generate code for the status record") {
+        @ContentAndMedia {
+            StatusphereKit calls XRPC methods through code that swift-atproto
+            generates from Lexicons. The starter only generates
+            `com.atproto.identity.resolveHandle`, which logging in needs.
+        }
+
+        @Steps {
+            @Step {
+                Open `StatusphereKit/.atproto.json`. It lists the Lexicons to
+                generate code for.
+
+                @Code(name: ".atproto.json", file: "atproto-config-01.json")
+            }
+
+            @Step {
+                Add the statusphere-example-app repository, which publishes the
+                `xyz.statusphere.status` Lexicon.
+
+                @Code(name: ".atproto.json", file: "atproto-config-02.json")
+            }
+
+            @Step {
+                Add `com.atproto.repo.createRecord`, which writes a record, and
+                `com.atproto.repo.defs`, which it refers to.
+
+                Every Lexicon that another one refers to must be listed too.
+
+                @Code(name: ".atproto.json", file: "atproto-config-03.json")
+            }
+
+            @Step {
+                Generate the code. If the generated code looks out of date,
+                delete `StatusphereKit/.lexicons` and run the command again.
+
+                @Code(name: "Terminal", file: "generate.sh")
+            }
+        }
+    }
+
+    @Section(title: "Write a status record") {
+        @ContentAndMedia {
+            Writing a record is a `com.atproto.repo.createRecord` call to the
+            user's PDS. The OAuth session signs the request.
+        }
+
+        @Steps {
+            @Step {
+                Create `StatusEntry.swift` in `StatusphereKit` to hold a status
+                the app has seen.
+
+                @Code(name: "StatusEntry.swift", file: "status-entry-01.swift")
+            }
+
+            @Step {
+                Add `setStatus(_:)` to `Session`. The generated
+                `Xyz.Statusphere.Status.make` checks the Lexicon's limits, such
+                as one grapheme for the status.
+
+                @Code(name: "StatusEntry.swift", file: "status-entry-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Read your latest status") {
+        @ContentAndMedia {
+            To show which status the user has now, read their newest record
+            back with `com.atproto.repo.listRecords`. Records are listed newest
+            first, so the first one is the latest.
+        }
+
+        @Steps {
+            @Step {
+                Add `com.atproto.repo.listRecords` to `.atproto.json`.
+
+                @Code(name: ".atproto.json", file: "atproto-config-04.json")
+            }
+
+            @Step {
+                Generate the code again.
+
+                @Code(name: "Terminal", file: "generate.sh")
+            }
+
+            @Step {
+                Add `latestStatus()` to `Session`. A listed record's value is
+                decoded into the generated type for its `$type`, so look for
+                `Xyz.Statusphere.Status`.
+
+                @Code(name: "StatusEntry.swift", file: "status-entry-03.swift")
+            }
+        }
+    }
+
+    @Section(title: "Choose a status in the app") {
+        @ContentAndMedia {
+            Replace the starter's "Authentication working!" card with a grid of
+            status emojis. Choosing one writes a record and highlights it right
+            away, like the web version does.
+        }
+
+        @Steps {
+            @Step {
+                Open `Statusphere/AppModel.swift`. It keeps track of who is
+                logged in.
+
+                @Code(name: "AppModel.swift", file: "app-model-01.swift")
+            }
+
+            @Step {
+                Add the status options, the user's status, and `setStatus(_:)`.
+                The model shows the choice before the record is written, and
+                goes back to the previous status if writing fails.
+
+                @Code(name: "AppModel.swift", file: "app-model-02.swift")
+            }
+
+            @Step {
+                After logging in, read the user's latest status so the right
+                emoji is highlighted.
+
+                @Code(name: "AppModel.swift", file: "app-model-03.swift")
+            }
+
+            @Step {
+                Create `Statusphere/StatusViews.swift` with the status picker.
+
+                @Code(name: "StatusViews.swift", file: "status-views-01.swift")
+            }
+
+            @Step {
+                Open `Statusphere/ContentView.swift`. After logging in, it
+                shows `SignedInView`.
+
+                @Code(name: "ContentView.swift", file: "content-view-01.swift")
+            }
+
+            @Step {
+                Show `StatusPickerView` instead, along with any error from
+                writing a status. Then delete `SignedInView.swift`, which is no
+                longer used.
+
+                @Code(name: "ContentView.swift", file: "content-view-02.swift")
+            }
+
+            @Step {
+                Run the app, log in, and choose a status. Open your repository
+                on [pdsls.dev](https://pdsls.dev) to see the
+                `xyz.statusphere.status` record.
+
+                @Code(name: "ContentView.swift", file: "content-view-02.swift")
+            }
+        }
+    }
+}

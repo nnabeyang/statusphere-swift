@@ -1,0 +1,29 @@
+@Tutorials(name: "Statusphere") {
+    @Intro(title: "Build Statusphere with SwiftUI") {
+        Statusphere is a small AT Protocol app: you set a status emoji, and you
+        see the statuses of everyone else who uses the app.
+
+        Start from the `main` branch of
+        [statusphere-swift](https://github.com/nnabeyang/statusphere-swift),
+        which can already log in with atproto OAuth. The `complete` branch has
+        the finished app.
+    }
+
+    @Chapter(name: "Set your status") {
+        Write `xyz.statusphere.status` records to your own repository, and
+        choose a status in the app.
+
+        @Image(source: "statusphere-chapter.png", alt: "Status emojis")
+
+        @TutorialReference(tutorial: "doc:SettingYourStatus")
+    }
+
+    @Chapter(name: "See everyone's statuses") {
+        Follow statuses across the network with Jetstream, and show the top
+        statuses and the most recent ones.
+
+        @Image(source: "everyone-chapter.png", alt: "Status emojis from many people")
+
+        @TutorialReference(tutorial: "doc:ShowingStatuses")
+    }
+}

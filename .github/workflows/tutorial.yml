@@ -1,0 +1,56 @@
+name: Tutorial
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Tutorial/**"
+      - ".github/workflows/tutorial.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: swift:6.4
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Convert the DocC catalog to a static site
+        run: |
+          docc convert Tutorial/Statusphere.docc \
+            --fallback-display-name Statusphere \
+            --fallback-bundle-identifier com.nnabeyang.Statusphere.Tutorial \
+            --transform-for-static-hosting \
+            --hosting-base-path statusphere-swift \
+            --output-path site
+
+      # Link previews do not run DocC's JavaScript, so write each page's title
+      # and Open Graph tags into its HTML. This also makes the site root
+      # redirect to the tutorials.
+      - name: Add Open Graph tags
+        run: |
+          cp Tutorial/og.png site/og.png
+          swift Tutorial/add-ogp.swift site https://nnabeyang.github.io/statusphere-swift/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}tutorials/statusphere/
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
